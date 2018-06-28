@@ -1,0 +1,90 @@
+<div class="fsss-container">
+  <header class="fsss-fade fsss-header">
+    <nav class="fsss-nav fss-fade">
+      <section></section>
+      <section>
+        <a href="#fsss-void" class="fsss-close">
+          <i class="fa fa-close"></i>
+        </a>
+      </section>
+    </nav>
+  </header>
+  <div id="{swiperId}" class="fsss-swiper swiper-container">
+    <div class="swiper-wrapper">
+    {#each imagesOK as {url, caption}}
+      <div class="fsss-image-wrapper swiper-slide">
+        <div class="fsss-image swiper-lazy" data-background="{url}"></div>
+        <div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
+      </div>
+    {/each}
+    </div>
+    <div class="swiper-pagination"></div>
+    <div class="fsss-prev swiper-button-prev swiper-button-white fsss-fade"></div>
+    <div class="fsss-next swiper-button-next swiper-button-white fsss-fade"></div>
+  </div>
+</div>
+
+<style>
+
+</style>
+
+<script>
+
+  import Swiper from 'swiper'
+
+  export default {
+    data() {
+      return {
+        swiperId: 'fsss-container-' + Math.random().toString(36).replace(/^[0-9]+\./,''),
+        opts: {}
+      }
+    },
+    computed: {
+      imagesOK: ({ images }) => {
+        images = images || []
+        return images
+          .filter(img => !!img)
+          .map(img => {
+            if (typeof img === 'string') {
+              return {url: img}
+            } else {
+              return {url: img.url, caption: img.caption}
+            }
+          })
+          .filter(img => !!img.url)
+      }
+    },
+    methods: {
+      show() {
+        this.set({
+          swiper: new Swiper('#' + this.get().swiperId, this.swiperOpts())
+        })
+        document.body.classList.add('fsss-reveal')
+        document.body.classList.add('fsss-body')
+      },
+      swiperOpts() {
+        const opts = this.get().opts || {}
+        return {
+          speed: 500,
+          initialSlide: opts.index || 0,
+          effect: 'slide',
+          lazy: {
+            loadPrevNext: true,
+            loadOnTransitionStart: true
+          },
+          navigation: {
+            nextEl: '.fsss-next',
+            prevEl: '.fsss-prev',
+          },
+          // on: {
+          //   init: function() {
+          //     // swiper not set on init
+          //     setTimeout(handleSlideChange)
+          //   },
+          //   slideChange: handleSlideChange()
+          // }
+        }
+      }
+    }
+  }
+</script>

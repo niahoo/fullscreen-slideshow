@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf8'>
+  <meta name='viewport' content='width=device-width'>
+
+  <title>Svelte app</title>
+  <link rel='stylesheet' href='bundle.css'>
+</head>
+
+<body style="padding:0;margin:0">
+  <div id="app-slideshow"></div>
+  <script src='bundle.js'></script>
+  <script>
+    Fsss.create(document.getElementById('app-slideshow'), {
+      images: [
+        {url: 'https://i.imgur.com/EoWVoF8.jpg', caption: "LOL !"},
+        'https://i.imgur.com/vZNwoN8.jpg',
+        'https://i.imgur.com/FD23KSS.jpg',
+      ]
+    }).show()
+  </script>
+</body>
+</html>
+
+
