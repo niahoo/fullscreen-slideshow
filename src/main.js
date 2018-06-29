@@ -1,6 +1,6 @@
-import Screenshow from './Screenshow.html';
-require('swiper/dist/css/swiper.min.css')
-require('./main.css')
+import Screenshow from './Screenshow.html'
+import 'swiper/dist/css/swiper.min.css'
+import './main.css'
 
 Screenshow.create = function(el, data) {
   return new this({

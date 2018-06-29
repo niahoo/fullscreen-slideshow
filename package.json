@@ -15,9 +15,13 @@
   },
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack",
-    "dev": "webpack-serve --content public --hot"
+    "dev": "yarn run clean && webpack-serve --content public --hot",
+    "clean": "rimraf public/bundle*"
   },
   "dependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.7.0",
     "swiper": "^4.3.3"
   }
 }
