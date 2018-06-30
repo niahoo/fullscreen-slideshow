@@ -1,4 +1,4 @@
-<div class="fsss-container">
+<div on:mousemove="reveal()" on:click="reveal()" class="fsss-container">
   <header class="fsss-fade fsss-header">
     <nav class="fsss-nav fss-fade">
       <section></section>
@@ -58,12 +58,10 @@
         this.set({
           swiper: new Swiper('#' + this.get().swiperId, this.swiperOpts())
         })
-        document.body.classList.add('fsss-reveal')
         document.body.classList.add('fsss-body')
         return this
       },
       close() {
-        document.body.classList.remove('fsss-reveal')
         document.body.classList.remove('fsss-body')
         // We must wait for the CSS transition to complete before destroying
         // swiper
@@ -96,7 +94,22 @@
           //   slideChange: handleSlideChange()
           // }
         }
+      },
+      reveal() {
+        let { isRevealed, revealTimeout } = this.get()
+        if (!isRevealed) {
+          document.body.classList.add('fsss-reveal')
+          this.set({ isRevealed: true })
+        }
+        clearTimeout(revealTimeout)
+        this.set({
+          revealTimeout: setTimeout(() => { this.cleanupReveal() }, 2000)
+        })
+      },
+      cleanupReveal() {
+        document.body.classList.remove('fsss-reveal')
+        this.set({ isRevealed: false })
       }
-    }
+    },
   }
 </script>
