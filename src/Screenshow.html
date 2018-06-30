@@ -3,9 +3,6 @@
     <nav class="fsss-nav fss-fade">
       <section></section>
       <section>
-        <a href="#fsss-void" class="fsss-close">
-          <i class="fa fa-close"></i>
-        </a>
       </section>
     </nav>
   </header>
@@ -21,6 +18,7 @@
     <div class="swiper-pagination"></div>
     <div class="fsss-prev swiper-button-prev swiper-button-white fsss-fade"></div>
     <div class="fsss-next swiper-button-next swiper-button-white fsss-fade"></div>
+    <div on:click="close()" class="fsss-close fsss-fade"></div>
   </div>
 </div>
 
@@ -36,6 +34,7 @@
     data() {
       return {
         swiperId: 'fsss-container-' + Math.random().toString(36).replace(/^[0-9]+\./,''),
+        swiper: null,
         opts: {}
       }
     },
@@ -61,6 +60,19 @@
         })
         document.body.classList.add('fsss-reveal')
         document.body.classList.add('fsss-body')
+        return this
+      },
+      close() {
+        document.body.classList.remove('fsss-reveal')
+        document.body.classList.remove('fsss-body')
+        // We must wait for the CSS transition to complete before destroying
+        // swiper
+        setTimeout(() => {
+          const { swiper } = this.get()
+          swiper.destroy()
+          this.set({ swiper: null })
+        }, 500)
+        return this
       },
       swiperOpts() {
         const opts = this.get().opts || {}

@@ -11,7 +11,6 @@ body.fsss-body::-webkit-scrollbar-track {
   top: 0;
   z-index: 10001;
   background-color: #111;
-  /*transition: background-color .7s ease-out, opacity .5s ease-out;*/
   visibility: hidden;
   opacity: 0;
   transition: visibility 0s linear .3s, opacity .3s ease-out;
@@ -49,7 +48,7 @@ body.fsss-body .fsss-container {
   opacity: 1;
 }
 .swiper-slide.fsss-image-wrapper {
-  padding: 2em 1em;
+  padding: 5px;
   display: flex;
 }
 .swiper-slide.fsss-image-wrapper .fsss-image {
@@ -62,10 +61,19 @@ body.fsss-body .fsss-container {
   display: none;
 }
 
-a.fsss-close {
-  color: white;
+.fsss-close {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2022%2022'%3E%3Cpath%20d%3D'M%200%2020%20L%2020%200%20l%202%202%20L%202%2022%20z'%20fill%3D'%23ffffff'%2F%3E%3Cpath%20d%3D'M%202%200%20L%2022%2020%20l%20-2%202%20L%200%202%20z'%20fill%3D'%23ffffff'%2F%3E%3C%2Fsvg%3E");
+  background-position: 50% 50%;
+  background-size: 22px 22px;
+  background-repeat: no-repeat;
+  width: 27px; height: 27px;
+  position: absolute;
+  top: 10px; right: 10px;
+  cursor: pointer;
+  z-index: 10;
 }
-a.fsss-close:hover {
+
+.fsss-close:hover {
   color: white;
   text-shadow: 1px 1px 2px white, -1px -1px 2px white;
 }

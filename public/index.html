@@ -9,10 +9,11 @@
 </head>
 
 <body style="padding:0;margin:0">
+  <button id="aaa">go swiper</button>
   <div id="app-slideshow"></div>
   <script src='bundle.js'></script>
   <script>
-    Fsss.create(document.getElementById('app-slideshow'), {
+    var slideshow = Fsss.create(document.getElementById('app-slideshow'), {
       images: [
         {url: '//via.placeholder.com/350x150', caption: "LOL !"},
         '//via.placeholder.com/150x300',
@@ -20,6 +21,9 @@
         '//via.placeholder.com/20x20',
       ]
     }).show()
+    document.getElementById('aaa').addEventListener('click', function(){
+      slideshow.show()
+    })
   </script>
 </body>
 </html>
