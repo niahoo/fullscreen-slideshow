@@ -58,6 +58,10 @@
 
   import KeyboardEvents from './KeyboardEvents' // force es5
 
+  const spawn = window.requestAnimationFrame
+    ? window.requestAnimationFrame
+    : f => setTimeout(f, 1)
+
   export default {
     components: {KeyboardEvents},
     data() {
@@ -93,7 +97,11 @@
               return Object.assign({}, img, { type: 'image' })
             }
           })
-          .filter(img => !!img.url)
+          .filter(img => {
+            if (img.type === 'image' && !!img.url) {
+              return true
+            }
+          })
         return normalized
       },
     },
@@ -126,15 +134,11 @@
         const currentSlide = swiper.slides[swiper.activeIndex]
         console.log('currentSlide', currentSlide)
         if (isSugar !== currentSlide.hasAttribute('data-fsss-sugar')) {
-          setTimeout(() => this.set({ isSugar: !isSugar }))
+          this.set({ isSugar: !isSugar })
         }
-        // var isSugar = $(swiper.slides[swiper.activeIndex]).hasClass('sugar')
-        // $container.toggleClass('sugar', isSugar)
-        // revealHiddenElements()
       },
       swiperOpts() {
         const opts = this.get().opts || {}
-        const handleSlideChange = () => this.handleSlideChange()
         return {
           speed: 500,
           initialSlide: opts.index || 0,
@@ -149,15 +153,14 @@
             prevEl: '.fsss-prev',
           },
           on: {
-            init: function() {
-              // swiper not set on init
-              if (window.requestAnimationFrame) {
-                requestAnimationFrame(handleSlideChange)
-              } else {
-                setTimeout(handleSlideChange)
-              }
+            init: () => {
+              // swiper is not set when init is called so we must spawn this
+              spawn(() => {
+                this.reveal()
+                this.handleSlideChange()
+              })
             },
-            slideChange: handleSlideChange
+            slideChange: () => this.handleSlideChange(),
           }
         }
       },
@@ -197,6 +200,8 @@
       },
     },
     helpers: {
+      // @todo put this in a function out of the component and use it in
+      // imagesNormalized
       imageClasses(image, data) {
         let classes = ['fsss-image', 'swiper-lazy']
         const { opts, winInnerHeight, winInnerWidth, imagePadding } = data

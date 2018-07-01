@@ -24,7 +24,7 @@ body.fsss-body .fsss-container {
   opacity: 1;
   transition:
     visibility 0s,
-    opacity .3s ease-out
+    opacity .3s ease-out,
     background-color .3s ease-out
     ;
 }
@@ -99,10 +99,17 @@ body.fsss-body .fsss-container {
     padding: 4em;
 }
 .fsss-title, .fsss-subtitle {
-    max-width: 60%;
+    /*text-align: center;*/
+    font-weight: 300;
 }
 .fsss-title {
   font-size: 4em;
+}
+@media only screen and (min-width: 700px) {
+  .fsss-title, .fsss-subtitle {
+      /*text-align: left;*/
+      max-width: 60%;
+  }
 }
 .fsss-text {
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
