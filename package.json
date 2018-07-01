@@ -2,9 +2,12 @@
   "name": "svelte-app",
   "version": "1.0.0",
   "devDependencies": {
+    "buble": "^0.19.3",
+    "buble-loader": "^0.5.1",
     "cross-env": "^5.1.5",
     "css-loader": "^0.28.11",
     "mini-css-extract-plugin": "^0.4.0",
+    "optimize-css-assets-webpack-plugin": "^4.0.3",
     "serve": "^6.5.5",
     "style-loader": "^0.21.0",
     "svelte": "^2.0.0",
@@ -14,14 +17,12 @@
     "webpack-serve": "^1.0.2"
   },
   "scripts": {
-    "build": "cross-env NODE_ENV=production webpack",
+    "build": "cross-env NODE_ENV=production webpack && yarn transpile",
+    "transpile": "cross-env NODE_ENV=production buble dist/bundle.js > dist/x.js && mv dist/x.js dist/bundle.js",
     "dev": "yarn run clean && webpack-serve --content public --hot --port 8000",
     "clean": "rimraf public/bundle*"
   },
   "dependencies": {
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.4",
-    "babel-preset-env": "^1.7.0",
     "swiper": "^4.3.3"
   }
 }

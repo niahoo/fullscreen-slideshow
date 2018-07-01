@@ -1,8 +1,17 @@
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 const mode = process.env.NODE_ENV || 'development';
 const prod = mode === 'production';
+
+const bubleLoader = {
+    loader: 'buble-loader',
+    options: {
+        objectAssign: 'Object.assign'
+    }
+}
 
 module.exports = {
     entry: {
@@ -12,29 +21,34 @@ module.exports = {
         extensions: ['.js', '.html']
     },
     output: {
-        path: __dirname + '/public',
+        path: __dirname + '/dist',
         filename: '[name].js',
         chunkFilename: '[name].[id].js'
     },
+    optimization: {
+        minimizer: [
+            new UglifyJsPlugin({
+                cache: true,
+                parallel: true,
+                sourceMap: true
+            }),
+            new OptimizeCSSAssetsPlugin({})
+        ]
+    },
     module: {
         rules: [{
-            test: /\.js$/,
-            exclude: /node_modules/,
-            use: 'babel-loader',
-        }, {
             test: /\.html$/,
             exclude: /node_modules/,
             use: [{
-                loader: 'babel-loader'
-            }, {
-                loader: 'svelte-loader',
-                options: {
-                    skipIntroByDefault: true,
-                    nestedTransitions: true,
-                    emitCss: true,
-                    hotReload: true
+                    loader: 'svelte-loader',
+                    options: {
+                        skipIntroByDefault: true,
+                        nestedTransitions: true,
+                        emitCss: true,
+                        hotReload: true
+                    }
                 }
-            }]
+            ]
         }, {
             test: /\.css$/,
             use: [
