@@ -1,16 +1,29 @@
+{#if isVisible}
+  <KeyboardEvents on:keyup="onkeyup(event)"/>
+{/if}
+<svelte:window
+  bind:innerWidth=winInnerWidth bind:innerHeight=winInnerHeight
+/>
 <div on:mousemove="reveal()" on:click="reveal()" class="fsss-container">
-  <header class="fsss-fade fsss-header">
-    <nav class="fsss-nav fss-fade">
-      <section></section>
-      <section>
-      </section>
-    </nav>
-  </header>
+  {#if debug}
+  <div style="color:red;font-family: monospace;">
+    winInnerWidth:  {winInnerWidth}<br>
+    winInnerHeight: {winInnerHeight}<br>
+    opts.maxImageWidth: {opts.maxImageWidth}<br>
+    opts.maxImageHeight: {opts.maxImageHeight}<br>
+  </div>
+  {/if}
   <div id="{swiperId}" class="fsss-swiper swiper-container">
     <div class="swiper-wrapper">
-    {#each imagesOK as {url, caption}}
+    {#each imagesNormalized as image}
       <div class="fsss-image-wrapper swiper-slide">
-        <div class="fsss-image swiper-lazy" data-background="{url}"></div>
+        <div class="{imageClasses(image, { opts, winInnerHeight, winInnerWidth, imagePadding })}" data-background="{image.url}">{#if debug}
+          <div style="color:red;font-family:monospace;background-color:white;padding:0 1em">
+classes : {imageClasses(image, { opts, winInnerHeight, winInnerWidth, imagePadding })} <br>
+width:  : {image.width || opts.maxImageWidth || false} <br>
+height: : {image.height || opts.maxImageHeight || false} <br>
+          </div>
+        {/if}</div>
         <div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
       </div>
     {/each}
@@ -30,33 +43,49 @@
 
   import Swiper from 'swiper/dist/js/swiper.js' // force es5
 
+  // We use a separated component for keyboard events so we can put-it in a #if
+  // block and not listen on events when the slideshow is invisible
+
+  import KeyboardEvents from './KeyboardEvents' // force es5
+
   export default {
+    components: {KeyboardEvents},
     data() {
       return {
         swiperId: 'fsss-container-' + Math.random().toString(36).replace(/^[0-9]+\./,''),
         swiper: null,
-        opts: {}
+        isVisible: false,
+        opts: {},
+        winInnerHeight: 0,
+        winInnerWidth: 0,
+        imagePadding: 5,
+        debug: false,
       }
     },
     computed: {
-      imagesOK: ({ images }) => {
+      imagesNormalized: ({ images }) => {
         images = images || []
-        return images
+        const normalized = images
           .filter(img => !!img)
           .map(img => {
             if (typeof img === 'string') {
               return {url: img}
-            } else {
-              return {url: img.url, caption: img.caption}
+            } else if(img.type === 'image' || !img.type) {
+              return Object.assign({}, img, { type: 'image' })
             }
           })
           .filter(img => !!img.url)
-      }
+        return normalized
+      },
     },
     methods: {
+      getData() {
+        return this.get()
+      },
       show() {
         this.set({
-          swiper: new Swiper('#' + this.get().swiperId, this.swiperOpts())
+          swiper: new Swiper('#' + this.get().swiperId, this.swiperOpts()),
+          isVisible: true,
         })
         document.body.classList.add('fsss-body')
         return this
@@ -68,7 +97,7 @@
         setTimeout(() => {
           const { swiper } = this.get()
           swiper.destroy()
-          this.set({ swiper: null })
+          this.set({ swiper: null, isVisible: false })
         }, 500)
         return this
       },
@@ -109,7 +138,66 @@
       cleanupReveal() {
         document.body.classList.remove('fsss-reveal')
         this.set({ isRevealed: false })
-      }
+      },
+      onkeyup({ key }) {
+        switch (key) {
+          case 'ArrowLeft':
+            this.withSwiper(swiper => swiper.slidePrev())
+            return
+          case 'ArrowRight':
+            this.withSwiper(swiper => swiper.slideNext())
+            return
+          case 'Escape':
+            this.close()
+            return
+        }
+      },
+      withSwiper(callback) {
+        const { swiper, isVisible } = this.get()
+        if (isVisible) {
+          callback(swiper)
+        }
+      },
+    },
+    helpers: {
+      imageClasses(image, data) {
+        let classes = ['fsss-image', 'swiper-lazy']
+        const { opts, winInnerHeight, winInnerWidth, imagePadding } = data
+        // Images can have width an height information. As defaults, the user
+        // can provide two options: maxImageHeight and maxImageWidth
+        // If none is defined for each dimension, it will be ignored.
+
+        // If one image dimension is bigger than what the viewport allows, it
+        // means that the viewport is smaller than the image, e.g. we are on a
+        // mobile with a small screen. In this case, fitBackgroundToViewport
+        // will be true and the css will be background-size: contain; so the
+        // image will fit the container
+
+        // If dimensions fit the viewport, background size will be undefined,
+        // css default to render the image at its natural size
+
+        // We take 5px padding each side into account.
+
+        // There are no default values, if the options are not defined, we will
+        // maximize all the time. The only problem with that is that small
+        // images will be stretched to fit big screens ; this is expected to be
+        // a rare scenario.
+
+        const width = image.width || opts.maxImageWidth || false
+        const height = image.height || opts.maxImageHeight || false
+
+        let fitBackgroundToViewport = false
+        if (width && (width + imagePadding * 2) > winInnerWidth) {
+          fitBackgroundToViewport = true
+        }
+        if (height && (height + imagePadding * 2) > winInnerHeight) {
+          fitBackgroundToViewport = true
+        }
+        if (fitBackgroundToViewport) {
+          classes.push('fsss-fit-background')
+        }
+        return classes.join(' ')
+      },
     },
   }
 </script>

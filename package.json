@@ -15,7 +15,7 @@
   },
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack",
-    "dev": "yarn run clean && webpack-serve --content public --hot",
+    "dev": "yarn run clean && webpack-serve --content public --hot --port 8000",
     "clean": "rimraf public/bundle*"
   },
   "dependencies": {

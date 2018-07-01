@@ -16,10 +16,15 @@
     var slideshow = Fsss.create(document.getElementById('app-slideshow'), {
       images: [
         {url: '//via.placeholder.com/350x150', caption: "LOL !"},
-        '//via.placeholder.com/150x300',
-        '//via.placeholder.com/2000x2000',
-        '//via.placeholder.com/20x20',
-      ]
+        {url: '//via.placeholder.com/150x300'},
+        {url: '//via.placeholder.com/2000x2000', width: 2000, height: 2000},
+        {url: '//via.placeholder.com/20x20', width: 20, height: 20},
+      ],
+      opts: {
+        maxImageWidth: 350,
+        maxImageHeight: 300,
+      },
+      debug: false
     }).show()
     document.getElementById('aaa').addEventListener('click', function(){
       slideshow.show()

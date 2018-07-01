@@ -53,10 +53,13 @@ body.fsss-body .fsss-container {
 }
 .swiper-slide.fsss-image-wrapper .fsss-image {
   flex: 1;
-  background-size: contain;
   background-repeat: no-repeat;
   background-position: 50% 50%;
 }
+.swiper-slide.fsss-image-wrapper .fsss-image.fsss-fit-background {
+  background-size: contain;
+}
+
 .swiper-button-disabled {
   display: none;
 }

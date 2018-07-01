@@ -8,6 +8,5 @@ Screenshow.create = function(el, data) {
     data,
   })
 }
-
 window.Fsss = Screenshow
 export default Screenshow
