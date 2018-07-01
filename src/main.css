@@ -58,16 +58,18 @@ body.fsss-body .fsss-container {
   transition: opacity .2s ease-out;
   opacity: 1;
 }
-.swiper-slide.fsss-image-wrapper {
+.fsss-slide {
   padding: 5px;
+}
+.fsss-slide.fsss-image-wrapper {
   display: flex;
 }
-.swiper-slide.fsss-image-wrapper .fsss-image {
+.fsss-slide.fsss-image-wrapper .fsss-image {
   flex: 1;
   background-repeat: no-repeat;
   background-position: 50% 50%;
 }
-.swiper-slide.fsss-image-wrapper .fsss-image.fsss-fit-background {
+.fsss-slide.fsss-image-wrapper .fsss-image.fsss-fit-background {
   background-size: contain;
 }
 

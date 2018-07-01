@@ -12,13 +12,19 @@
   <button id="aaa">go swiper</button>
   <div id="app-slideshow"></div>
   <script src='bundle.js'></script>
+  <script type="text/html" id="hello-tpl">
+    <p style="padding: 3em;" class="fsss-text fsss-subtitle">
+      This is an html template to demonstrate html slides.
+    </p>
+  </script>
   <script>
     var slideshow = Fsss.create(document.getElementById('app-slideshow'), {
-      images: [
+      slides: [
         {url: '//via.placeholder.com/350x150', caption: "LOL !"},
         {url: '//via.placeholder.com/150x300'},
         {url: '//via.placeholder.com/2000x2000', width: 2000, height: 2000},
         {url: '//via.placeholder.com/20x20', width: 20, height: 20},
+        {type: 'html', html: document.getElementById('hello-tpl').innerHTML, sugar: true},
       ],
       intro: {
         title: "This is a slideshow !"

@@ -16,7 +16,7 @@
   <div id="{swiperId}" class="fsss-swiper swiper-container">
     <div class="swiper-wrapper">
       {#if intro}
-        <div class="fsss-intro swiper-slide" data-fsss-sugar>
+        <div class="fsss-intro swiper-slide fsss-slide" data-fsss-sugar>
           {#if intro.title}
             <h1 class="fsss-title fsss-text">{intro.title}</h1>
           {/if}
@@ -25,17 +25,15 @@
           {/if}
         </div>
       {/if}
-      {#each imagesNormalized as image}
-        <div class="fsss-image-wrapper swiper-slide">
-          <div class="{imageClasses(image, { opts, winInnerHeight, winInnerWidth, imagePadding })}" data-background="{image.url}">{#if debug}
-            <div style="color:red;font-family:monospace;background-color:white;padding:0 1em">
-  classes : {imageClasses(image, { opts, winInnerHeight, winInnerWidth, imagePadding })} <br>
-  width:  : {image.width || opts.maxImageWidth || false} <br>
-  height: : {image.height || opts.maxImageHeight || false} <br>
-            </div>
-          {/if}</div>
-          <div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
-        </div>
+      {#each slidesNormalized as slide}
+        {#if slide.type === 'image'}
+          <div class="fsss-image-wrapper swiper-slide fsss-slide">
+            <div class="{imageClasses(slide, { opts, winInnerHeight, winInnerWidth, imagePadding })}" data-background="{slide.url}"></div>
+            <div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
+          </div>
+        {:elseif slide.type === 'html'}
+          <div class="swiper-slide fsss-slide fsss-html" data-fsss-sugar="{!!slide.sugar}">{@html slide.html}</div>
+        {/if}
       {/each}
     </div>
     <div class="swiper-pagination"></div>
@@ -62,6 +60,7 @@
     ? window.requestAnimationFrame
     : f => setTimeout(f, 1)
 
+  // @todo opts should be used only for swiper opts
   export default {
     components: {KeyboardEvents},
     data() {
@@ -70,7 +69,7 @@
         swiper: null,
         isVisible: false,
         isSugar: false,
-        images: [],
+        slides: [],
         opts: {},
         winInnerHeight: 0,
         winInnerWidth: 0,
@@ -86,20 +85,17 @@
         }
         return classes.join(' ')
       },
-      imagesNormalized: ({ images }) => {
-        images = images || []
-        const normalized = images
-          .filter(img => !!img)
-          .map(img => {
-            if (typeof img === 'string') {
-              return {url: img}
-            } else if(img.type === 'image' || !img.type) {
-              return Object.assign({}, img, { type: 'image' })
-            }
-          })
-          .filter(img => {
-            if (img.type === 'image' && !!img.url) {
-              return true
+      slidesNormalized: ({ slides }) => {
+        slides = slides || []
+        const normalized = slides
+          .filter(slide => !!slide)
+          .map(slide => {
+            if (typeof slide === 'string') {
+              return {type: 'image', url: slide}
+            } else if(slide.type === 'image' || !slide.type) {
+              return Object.assign({}, slide, { type: 'image' })
+            } else {
+              return slide
             }
           })
         return normalized
@@ -130,10 +126,9 @@
       },
       handleSlideChange() {
         const { swiper, isSugar } = this.get()
-        console.log('swiper.slides', swiper.slides)
         const currentSlide = swiper.slides[swiper.activeIndex]
-        console.log('currentSlide', currentSlide)
-        if (isSugar !== currentSlide.hasAttribute('data-fsss-sugar')) {
+        const slideIsSugar = currentSlide.getAttribute('data-fsss-sugar') === 'true'
+        if (isSugar !== slideIsSugar) {
           this.set({ isSugar: !isSugar })
         }
       },
@@ -201,7 +196,7 @@
     },
     helpers: {
       // @todo put this in a function out of the component and use it in
-      // imagesNormalized
+      // slidesNormalized
       imageClasses(image, data) {
         let classes = ['fsss-image', 'swiper-lazy']
         const { opts, winInnerHeight, winInnerWidth, imagePadding } = data
