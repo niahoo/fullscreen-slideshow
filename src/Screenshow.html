@@ -4,7 +4,7 @@
 <svelte:window
   bind:innerWidth=winInnerWidth bind:innerHeight=winInnerHeight
 />
-<div on:mousemove="reveal()" on:click="reveal()" class="fsss-container">
+<div on:mousemove="reveal()" on:click="reveal()" class="{containerClasses}">
   {#if debug}
   <div style="color:red;font-family: monospace;">
     winInnerWidth:  {winInnerWidth}<br>
@@ -15,18 +15,28 @@
   {/if}
   <div id="{swiperId}" class="fsss-swiper swiper-container">
     <div class="swiper-wrapper">
-    {#each imagesNormalized as image}
-      <div class="fsss-image-wrapper swiper-slide">
-        <div class="{imageClasses(image, { opts, winInnerHeight, winInnerWidth, imagePadding })}" data-background="{image.url}">{#if debug}
-          <div style="color:red;font-family:monospace;background-color:white;padding:0 1em">
-classes : {imageClasses(image, { opts, winInnerHeight, winInnerWidth, imagePadding })} <br>
-width:  : {image.width || opts.maxImageWidth || false} <br>
-height: : {image.height || opts.maxImageHeight || false} <br>
-          </div>
-        {/if}</div>
-        <div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
-      </div>
-    {/each}
+      {#if intro}
+        <div class="fsss-intro swiper-slide" data-fsss-sugar>
+          {#if intro.title}
+            <h1 class="fsss-title fsss-text">{intro.title}</h1>
+          {/if}
+          {#if intro.subtitle}
+            <h2 class="fsss-subtitle fsss-text">{intro.subtitle}</h2>
+          {/if}
+        </div>
+      {/if}
+      {#each imagesNormalized as image}
+        <div class="fsss-image-wrapper swiper-slide">
+          <div class="{imageClasses(image, { opts, winInnerHeight, winInnerWidth, imagePadding })}" data-background="{image.url}">{#if debug}
+            <div style="color:red;font-family:monospace;background-color:white;padding:0 1em">
+  classes : {imageClasses(image, { opts, winInnerHeight, winInnerWidth, imagePadding })} <br>
+  width:  : {image.width || opts.maxImageWidth || false} <br>
+  height: : {image.height || opts.maxImageHeight || false} <br>
+            </div>
+          {/if}</div>
+          <div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
+        </div>
+      {/each}
     </div>
     <div class="swiper-pagination"></div>
     <div class="fsss-prev swiper-button-prev swiper-button-white fsss-fade"></div>
@@ -55,6 +65,8 @@ height: : {image.height || opts.maxImageHeight || false} <br>
         swiperId: 'fsss-container-' + Math.random().toString(36).replace(/^[0-9]+\./,''),
         swiper: null,
         isVisible: false,
+        isSugar: false,
+        images: [],
         opts: {},
         winInnerHeight: 0,
         winInnerWidth: 0,
@@ -63,6 +75,13 @@ height: : {image.height || opts.maxImageHeight || false} <br>
       }
     },
     computed: {
+      containerClasses: ({ isSugar }) => {
+        const classes = ['fsss-container']
+        if (isSugar) {
+          classes.push('fsss-sugar')
+        }
+        return classes.join(' ')
+      },
       imagesNormalized: ({ images }) => {
         images = images || []
         const normalized = images
@@ -101,12 +120,26 @@ height: : {image.height || opts.maxImageHeight || false} <br>
         }, 500)
         return this
       },
+      handleSlideChange() {
+        const { swiper, isSugar } = this.get()
+        console.log('swiper.slides', swiper.slides)
+        const currentSlide = swiper.slides[swiper.activeIndex]
+        console.log('currentSlide', currentSlide)
+        if (isSugar !== currentSlide.hasAttribute('data-fsss-sugar')) {
+          setTimeout(() => this.set({ isSugar: !isSugar }))
+        }
+        // var isSugar = $(swiper.slides[swiper.activeIndex]).hasClass('sugar')
+        // $container.toggleClass('sugar', isSugar)
+        // revealHiddenElements()
+      },
       swiperOpts() {
         const opts = this.get().opts || {}
+        const handleSlideChange = () => this.handleSlideChange()
         return {
           speed: 500,
           initialSlide: opts.index || 0,
           effect: 'slide',
+          preloadImages: false,
           lazy: {
             loadPrevNext: true,
             loadOnTransitionStart: true
@@ -115,13 +148,17 @@ height: : {image.height || opts.maxImageHeight || false} <br>
             nextEl: '.fsss-next',
             prevEl: '.fsss-prev',
           },
-          // on: {
-          //   init: function() {
-          //     // swiper not set on init
-          //     setTimeout(handleSlideChange)
-          //   },
-          //   slideChange: handleSlideChange()
-          // }
+          on: {
+            init: function() {
+              // swiper not set on init
+              if (window.requestAnimationFrame) {
+                requestAnimationFrame(handleSlideChange)
+              } else {
+                setTimeout(handleSlideChange)
+              }
+            },
+            slideChange: handleSlideChange
+          }
         }
       },
       reveal() {
