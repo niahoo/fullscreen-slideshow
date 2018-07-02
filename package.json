@@ -1,6 +1,7 @@
 {
-  "name": "svelte-app",
-  "version": "1.0.0",
+  "name": "fsss",
+  "version": "1.0.1",
+  "main": "src/main.js",
   "devDependencies": {
     "cross-env": "^5.2.0",
     "npm-run-all": "^4.1.3",
