@@ -1,4 +1,4 @@
-var app = (function () {
+var Fsss = (function () {
 	'use strict';
 
 	function noop() {}
@@ -50,10 +50,6 @@ var app = (function () {
 
 	function removeListener(node, event, handler) {
 		node.removeEventListener(event, handler, false);
-	}
-
-	function setStyle(node, key, value) {
-		node.style.setProperty(key, value);
 	}
 
 	function blankObject() {
@@ -8012,7 +8008,6 @@ var app = (function () {
 	    winInnerHeight: 0,
 	    winInnerWidth: 0,
 	    imagePadding: 5,
-	    debug: false,
 	  }
 	}
 	function imageClasses(image, data) {
@@ -8150,7 +8145,7 @@ var app = (function () {
 	const file$1 = "src\\Screenshow.html";
 
 	function create_main_fragment$1(component, ctx) {
-		var text, div, text_1, div_1, div_2, text_2, text_4, div_3, text_5, div_4, text_6, div_5, text_7, div_6, current;
+		var text, div, div_1, div_2, text_1, text_3, div_3, text_4, div_4, text_5, div_5, text_6, div_6, current;
 
 		function onwindowresize(event) {
 			component._updatingReadonlyProperty = true;
@@ -8166,9 +8161,7 @@ var app = (function () {
 
 		var if_block = (ctx.isVisible) && create_if_block(component, ctx);
 
-		var if_block_1 = (ctx.debug) && create_if_block_1(component, ctx);
-
-		var if_block_2 = (ctx.intro) && create_if_block_2(component, ctx);
+		var if_block_1 = (ctx.intro) && create_if_block_1(component, ctx);
 
 		var each_value = ctx.slidesNormalized;
 
@@ -8195,39 +8188,37 @@ var app = (function () {
 				if (if_block) if_block.c();
 				text = createText("\n\n");
 				div = createElement("div");
-				if (if_block_1) if_block_1.c();
-				text_1 = createText("\n  ");
 				div_1 = createElement("div");
 				div_2 = createElement("div");
-				if (if_block_2) if_block_2.c();
-				text_2 = createText("\n      ");
+				if (if_block_1) if_block_1.c();
+				text_1 = createText("\n      ");
 
 				for (var i = 0; i < each_blocks.length; i += 1) {
 					each_blocks[i].c();
 				}
 
-				text_4 = createText("\n    ");
+				text_3 = createText("\n    ");
 				div_3 = createElement("div");
-				text_5 = createText("\n    ");
+				text_4 = createText("\n    ");
 				div_4 = createElement("div");
-				text_6 = createText("\n    ");
+				text_5 = createText("\n    ");
 				div_5 = createElement("div");
-				text_7 = createText("\n    ");
+				text_6 = createText("\n    ");
 				div_6 = createElement("div");
 				div_2.className = "swiper-wrapper";
-				addLoc(div_2, file$1, 16, 4, 554);
+				addLoc(div_2, file$1, 8, 4, 292);
 				div_3.className = "swiper-pagination";
-				addLoc(div_3, file$1, 38, 4, 1507);
+				addLoc(div_3, file$1, 30, 4, 1245);
 				div_4.className = "fsss-prev swiper-button-prev swiper-button-white fsss-fade";
-				addLoc(div_4, file$1, 39, 4, 1549);
+				addLoc(div_4, file$1, 31, 4, 1287);
 				div_5.className = "fsss-next swiper-button-next swiper-button-white fsss-fade";
-				addLoc(div_5, file$1, 40, 4, 1632);
+				addLoc(div_5, file$1, 32, 4, 1370);
 				addListener(div_6, "click", click_handler);
 				div_6.className = "fsss-close fsss-fade";
-				addLoc(div_6, file$1, 41, 4, 1715);
+				addLoc(div_6, file$1, 33, 4, 1453);
 				div_1.id = ctx.swiperId;
 				div_1.className = "fsss-swiper swiper-container";
-				addLoc(div_1, file$1, 15, 2, 491);
+				addLoc(div_1, file$1, 7, 2, 229);
 				addListener(div, "mousemove", mousemove_handler);
 				addListener(div, "click", click_handler_1);
 				div.className = ctx.containerClasses;
@@ -8238,24 +8229,22 @@ var app = (function () {
 				if (if_block) if_block.m(target, anchor);
 				insertNode(text, target, anchor);
 				insertNode(div, target, anchor);
-				if (if_block_1) if_block_1.m(div, null);
-				appendNode(text_1, div);
 				appendNode(div_1, div);
 				appendNode(div_2, div_1);
-				if (if_block_2) if_block_2.m(div_2, null);
-				appendNode(text_2, div_2);
+				if (if_block_1) if_block_1.m(div_2, null);
+				appendNode(text_1, div_2);
 
 				for (var i = 0; i < each_blocks.length; i += 1) {
 					each_blocks[i].m(div_2, null);
 				}
 
-				appendNode(text_4, div_1);
+				appendNode(text_3, div_1);
 				appendNode(div_3, div_1);
-				appendNode(text_5, div_1);
+				appendNode(text_4, div_1);
 				appendNode(div_4, div_1);
-				appendNode(text_6, div_1);
+				appendNode(text_5, div_1);
 				appendNode(div_5, div_1);
-				appendNode(text_7, div_1);
+				appendNode(text_6, div_1);
 				appendNode(div_6, div_1);
 				current = true;
 			},
@@ -8274,30 +8263,17 @@ var app = (function () {
 					});
 				}
 
-				if (ctx.debug) {
+				if (ctx.intro) {
 					if (if_block_1) {
 						if_block_1.p(changed, ctx);
 					} else {
 						if_block_1 = create_if_block_1(component, ctx);
 						if_block_1.c();
-						if_block_1.m(div, text_1);
+						if_block_1.m(div_2, text_1);
 					}
 				} else if (if_block_1) {
 					if_block_1.d(1);
 					if_block_1 = null;
-				}
-
-				if (ctx.intro) {
-					if (if_block_2) {
-						if_block_2.p(changed, ctx);
-					} else {
-						if_block_2 = create_if_block_2(component, ctx);
-						if_block_2.c();
-						if_block_2.m(div_2, text_2);
-					}
-				} else if (if_block_2) {
-					if_block_2.d(1);
-					if_block_2 = null;
 				}
 
 				if (changed.slidesNormalized || changed.opts || changed.winInnerHeight || changed.winInnerWidth || changed.imagePadding) {
@@ -8355,7 +8331,6 @@ var app = (function () {
 				}
 
 				if (if_block_1) if_block_1.d();
-				if (if_block_2) if_block_2.d();
 
 				destroyEach(each_blocks, detach);
 
@@ -8408,78 +8383,8 @@ var app = (function () {
 		};
 	}
 
-	// (8:2) {#if debug}
-	function create_if_block_1(component, ctx) {
-		var div, text, text_1, br, text_2, text_3, br_1, text_4, text_5_value = ctx.opts.maxImageWidth, text_5, br_2, text_6, text_7_value = ctx.opts.maxImageHeight, text_7, br_3;
-
-		return {
-			c: function create() {
-				div = createElement("div");
-				text = createText("winInnerWidth:  ");
-				text_1 = createText(ctx.winInnerWidth);
-				br = createElement("br");
-				text_2 = createText("\n    winInnerHeight: ");
-				text_3 = createText(ctx.winInnerHeight);
-				br_1 = createElement("br");
-				text_4 = createText("\n    opts.maxImageWidth: ");
-				text_5 = createText(text_5_value);
-				br_2 = createElement("br");
-				text_6 = createText("\n    opts.maxImageHeight: ");
-				text_7 = createText(text_7_value);
-				br_3 = createElement("br");
-				addLoc(br, file$1, 9, 35, 326);
-				addLoc(br_1, file$1, 10, 36, 367);
-				addLoc(br_2, file$1, 11, 44, 416);
-				addLoc(br_3, file$1, 12, 46, 467);
-				setStyle(div, "color", "red");
-				setStyle(div, "font-family", "monospace");
-				addLoc(div, file$1, 8, 2, 243);
-			},
-
-			m: function mount(target, anchor) {
-				insertNode(div, target, anchor);
-				appendNode(text, div);
-				appendNode(text_1, div);
-				appendNode(br, div);
-				appendNode(text_2, div);
-				appendNode(text_3, div);
-				appendNode(br_1, div);
-				appendNode(text_4, div);
-				appendNode(text_5, div);
-				appendNode(br_2, div);
-				appendNode(text_6, div);
-				appendNode(text_7, div);
-				appendNode(br_3, div);
-			},
-
-			p: function update(changed, ctx) {
-				if (changed.winInnerWidth) {
-					text_1.data = ctx.winInnerWidth;
-				}
-
-				if (changed.winInnerHeight) {
-					text_3.data = ctx.winInnerHeight;
-				}
-
-				if ((changed.opts) && text_5_value !== (text_5_value = ctx.opts.maxImageWidth)) {
-					text_5.data = text_5_value;
-				}
-
-				if ((changed.opts) && text_7_value !== (text_7_value = ctx.opts.maxImageHeight)) {
-					text_7.data = text_7_value;
-				}
-			},
-
-			d: function destroy$$1(detach) {
-				if (detach) {
-					detachNode(div);
-				}
-			}
-		};
-	}
-
-	// (20:10) {#if intro.title}
-	function create_if_block_3(component, ctx) {
+	// (12:10) {#if intro.title}
+	function create_if_block_2(component, ctx) {
 		var h1, text_value = ctx.intro.title, text;
 
 		return {
@@ -8487,7 +8392,7 @@ var app = (function () {
 				h1 = createElement("h1");
 				text = createText(text_value);
 				h1.className = "fsss-title fsss-text";
-				addLoc(h1, file$1, 20, 12, 714);
+				addLoc(h1, file$1, 12, 12, 452);
 			},
 
 			m: function mount(target, anchor) {
@@ -8509,8 +8414,8 @@ var app = (function () {
 		};
 	}
 
-	// (23:10) {#if intro.subtitle}
-	function create_if_block_4(component, ctx) {
+	// (15:10) {#if intro.subtitle}
+	function create_if_block_3(component, ctx) {
 		var h2, text_value = ctx.intro.subtitle, text;
 
 		return {
@@ -8518,7 +8423,7 @@ var app = (function () {
 				h2 = createElement("h2");
 				text = createText(text_value);
 				h2.className = "fsss-subtitle fsss-text";
-				addLoc(h2, file$1, 23, 12, 825);
+				addLoc(h2, file$1, 15, 12, 563);
 			},
 
 			m: function mount(target, anchor) {
@@ -8540,13 +8445,13 @@ var app = (function () {
 		};
 	}
 
-	// (18:6) {#if intro}
-	function create_if_block_2(component, ctx) {
+	// (10:6) {#if intro}
+	function create_if_block_1(component, ctx) {
 		var div, text;
 
-		var if_block = (ctx.intro.title) && create_if_block_3(component, ctx);
+		var if_block = (ctx.intro.title) && create_if_block_2(component, ctx);
 
-		var if_block_1 = (ctx.intro.subtitle) && create_if_block_4(component, ctx);
+		var if_block_1 = (ctx.intro.subtitle) && create_if_block_3(component, ctx);
 
 		return {
 			c: function create() {
@@ -8556,7 +8461,7 @@ var app = (function () {
 				if (if_block_1) if_block_1.c();
 				div.className = "fsss-intro swiper-slide fsss-slide";
 				div.dataset.fsssSugar = true;
-				addLoc(div, file$1, 18, 8, 609);
+				addLoc(div, file$1, 10, 8, 347);
 			},
 
 			m: function mount(target, anchor) {
@@ -8571,7 +8476,7 @@ var app = (function () {
 					if (if_block) {
 						if_block.p(changed, ctx);
 					} else {
-						if_block = create_if_block_3(component, ctx);
+						if_block = create_if_block_2(component, ctx);
 						if_block.c();
 						if_block.m(div, text);
 					}
@@ -8584,7 +8489,7 @@ var app = (function () {
 					if (if_block_1) {
 						if_block_1.p(changed, ctx);
 					} else {
-						if_block_1 = create_if_block_4(component, ctx);
+						if_block_1 = create_if_block_3(component, ctx);
 						if_block_1.c();
 						if_block_1.m(div, null);
 					}
@@ -8605,13 +8510,13 @@ var app = (function () {
 		};
 	}
 
-	// (28:6) {#each slidesNormalized as slide}
+	// (20:6) {#each slidesNormalized as slide}
 	function create_each_block(component, ctx) {
 		var if_block_anchor;
 
 		function select_block_type(ctx) {
-			if (ctx.slide.type === 'image') return create_if_block_5;
-			if (ctx.slide.type === 'html') return create_if_block_6;
+			if (ctx.slide.type === 'image') return create_if_block_4;
+			if (ctx.slide.type === 'html') return create_if_block_5;
 			return null;
 		}
 
@@ -8651,8 +8556,8 @@ var app = (function () {
 		};
 	}
 
-	// (29:8) {#if slide.type === 'image'}
-	function create_if_block_5(component, ctx) {
+	// (21:8) {#if slide.type === 'image'}
+	function create_if_block_4(component, ctx) {
 		var div, div_1, div_1_class_value, div_1_data_background_value, text, div_2;
 
 		return {
@@ -8663,11 +8568,11 @@ var app = (function () {
 				div_2 = createElement("div");
 				div_1.className = div_1_class_value = imageClasses(ctx.slide, { opts: ctx.opts, winInnerHeight: ctx.winInnerHeight, winInnerWidth: ctx.winInnerWidth, imagePadding: ctx.imagePadding });
 				div_1.dataset.background = div_1_data_background_value = ctx.slide.url;
-				addLoc(div_1, file$1, 30, 12, 1082);
+				addLoc(div_1, file$1, 22, 12, 820);
 				div_2.className = "swiper-lazy-preloader swiper-lazy-preloader-white";
-				addLoc(div_2, file$1, 31, 12, 1221);
+				addLoc(div_2, file$1, 23, 12, 959);
 				div.className = "fsss-image-wrapper swiper-slide fsss-slide";
-				addLoc(div, file$1, 29, 10, 1013);
+				addLoc(div, file$1, 21, 10, 751);
 			},
 
 			m: function mount(target, anchor) {
@@ -8695,8 +8600,8 @@ var app = (function () {
 		};
 	}
 
-	// (34:39) 
-	function create_if_block_6(component, ctx) {
+	// (26:39) 
+	function create_if_block_5(component, ctx) {
 		var div, raw_value = ctx.slide.html, div_data_fsss_sugar_value;
 
 		return {
@@ -8704,7 +8609,7 @@ var app = (function () {
 				div = createElement("div");
 				div.className = "swiper-slide fsss-slide fsss-html";
 				div.dataset.fsssSugar = div_data_fsss_sugar_value = !!ctx.slide.sugar;
-				addLoc(div, file$1, 34, 10, 1358);
+				addLoc(div, file$1, 26, 10, 1096);
 			},
 
 			m: function mount(target, anchor) {
@@ -8752,11 +8657,10 @@ var app = (function () {
 		if (!('winInnerWidth' in this._state)) console.warn("<Screenshow> was created without expected data property 'winInnerWidth'");
 		if (!('winInnerHeight' in this._state)) console.warn("<Screenshow> was created without expected data property 'winInnerHeight'");
 
-		if (!('debug' in this._state)) console.warn("<Screenshow> was created without expected data property 'debug'");
-		if (!('opts' in this._state)) console.warn("<Screenshow> was created without expected data property 'opts'");
 		if (!('swiperId' in this._state)) console.warn("<Screenshow> was created without expected data property 'swiperId'");
 		if (!('intro' in this._state)) console.warn("<Screenshow> was created without expected data property 'intro'");
 
+		if (!('opts' in this._state)) console.warn("<Screenshow> was created without expected data property 'opts'");
 		if (!('imagePadding' in this._state)) console.warn("<Screenshow> was created without expected data property 'imagePadding'");
 		this._intro = !!options.intro;
 
@@ -8809,7 +8713,6 @@ var app = (function () {
 	    data,
 	  })
 	};
-	window.Fsss = Screenshow;
 
 	return Screenshow;
 

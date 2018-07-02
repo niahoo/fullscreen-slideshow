@@ -5,14 +5,6 @@
   bind:innerWidth=winInnerWidth bind:innerHeight=winInnerHeight
 />
 <div on:mousemove="reveal()" on:click="reveal()" class="{containerClasses}">
-  {#if debug}
-  <div style="color:red;font-family: monospace;">
-    winInnerWidth:  {winInnerWidth}<br>
-    winInnerHeight: {winInnerHeight}<br>
-    opts.maxImageWidth: {opts.maxImageWidth}<br>
-    opts.maxImageHeight: {opts.maxImageHeight}<br>
-  </div>
-  {/if}
   <div id="{swiperId}" class="fsss-swiper swiper-container">
     <div class="swiper-wrapper">
       {#if intro}
@@ -43,10 +35,6 @@
   </div>
 </div>
 
-<style>
-
-</style>
-
 <script>
 
   import Swiper from 'swiper/dist/js/swiper.js' // force es5
@@ -74,7 +62,6 @@
         winInnerHeight: 0,
         winInnerWidth: 0,
         imagePadding: 5,
-        debug: false,
       }
     },
     computed: {

@@ -3,15 +3,16 @@ import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import buble from 'rollup-plugin-buble';
 import { uglify } from 'rollup-plugin-uglify';
-import scss from 'rollup-plugin-scss'
+import postcss from 'rollup-plugin-postcss'
+
 import { writeFileSync } from 'fs'
 
 const production = !process.env.ROLLUP_WATCH;
 const outputJs = production
-	? 'public/fsss.min.js'
+	? 'dist/fsss.min.js'
 	: 'public/fsss.js'
 const outputCss = production
-	? 'public/fsss.min.css'
+	? 'dist/fsss.min.css'
 	: 'public/fsss.css'
 
 
@@ -20,10 +21,11 @@ export default {
   output: {
     sourcemap: true,
     format: 'iife',
-    name: 'app',
+    name: 'Fsss', // export in global namespace
     file: outputJs
   },
   plugins: [
+
     svelte({
       // opt in to v3 behaviour today
       skipIntroByDefault: true,
@@ -33,10 +35,10 @@ export default {
       dev: !production,
       // we'll extract any component CSS out into
       // a separate file — better for performance
-      css: css => {
-        css.write('public/bundle.css');
-      }
+      css: false
     }),
+
+		postcss({ extract: true, minimize: production }),
 
     // If you have external dependencies installed from
     // npm, you'll most likely need these plugins. In
@@ -46,7 +48,6 @@ export default {
     resolve(),
     commonjs(),
 
-    scss({ output: outputCss, verbose: true }),
 
     // If we're building for production (npm run build
     // instead of npm run dev), transpile and minify
