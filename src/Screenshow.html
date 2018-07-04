@@ -2,7 +2,8 @@
   <KeyboardEvents on:keyup="onkeyup(event)"/>
 {/if}
 <svelte:window
-  bind:innerWidth=winInnerWidth bind:innerHeight=winInnerHeight
+  bind:innerWidth=winInnerWidth
+  bind:innerHeight=winInnerHeight
 />
 <div on:mousemove="reveal()" on:click="reveal()" class="{containerClasses}">
   <div id="{swiperId}" class="fsss-swiper swiper-container">
@@ -24,7 +25,13 @@
             <div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
           </div>
         {:elseif slide.type === 'html'}
-          <div class="swiper-slide fsss-slide fsss-html" data-fsss-sugar="{!!slide.sugar}">{@html slide.html}</div>
+          <div class="swiper-slide fsss-slide fsss-html" data-fsss-sugar="{!!slide.sugar}">
+            {@html slide.html}
+          </div>
+        {:elseif slide.type === 'svelte'}
+          <div class="swiper-slide fsss-slide fsss-html" data-fsss-sugar="{!!slide.sugar}">
+            <svelte:component this={slide.component} slide={slide.slide} on:relayEvent="relayEvent(event)" />
+          </div>
         {/if}
       {/each}
     </div>
@@ -53,10 +60,11 @@
     components: {KeyboardEvents},
     data() {
       return {
+        intro: null,
         swiperId: 'fsss-container-' + Math.random().toString(36).replace(/^[0-9]+\./,''),
         swiper: null,
         isVisible: false,
-        isSugar: false,
+        isSugar: true,
         slides: [],
         opts: {},
         winInnerHeight: 0,
@@ -92,38 +100,70 @@
       getData() {
         return this.get()
       },
-      show() {
+      show({ intro, slides }) {
         this.set({
-          swiper: new Swiper('#' + this.get().swiperId, this.swiperOpts()),
+          intro: intro || null,
+          slides: slides || []
+        })
+        const { swiper } = this.get()
+        this.set({
+          swiper: this.maybeBuildSwiper(swiper),
           isVisible: true,
         })
         document.body.classList.add('fsss-body')
+        setTimeout(function(){
+          document.documentElement.classList.add('fsss-html')
+        }, 300)
+        this.handleSlideChange()
         return this
       },
       close() {
         document.body.classList.remove('fsss-body')
+        document.documentElement.classList.remove('fsss-html')
         // We must wait for the CSS transition to complete before destroying
         // swiper
         setTimeout(() => {
           const { swiper } = this.get()
           swiper.destroy()
-          this.set({ swiper: null, isVisible: false })
+          this.set({
+            swiper: null,
+            isVisible: false,
+          })
         }, 500)
         return this
       },
       handleSlideChange() {
         const { swiper, isSugar } = this.get()
-        const currentSlide = swiper.slides[swiper.activeIndex]
-        const slideIsSugar = currentSlide.getAttribute('data-fsss-sugar') === 'true'
-        if (isSugar !== slideIsSugar) {
-          this.set({ isSugar: !isSugar })
+        // If starting on initialSlide different of 0, swiper will be
+        if (swiper) {
+          const currentSlide = swiper.slides[swiper.activeIndex]
+          const slideIsSugar = currentSlide.getAttribute('data-fsss-sugar') === 'true'
+          if (isSugar !== slideIsSugar) {
+            this.set({ isSugar: !isSugar })
+          }
         }
       },
-      swiperOpts() {
+      maybeBuildSwiper(maybeInstance) {
+        let swiper
         const opts = this.get().opts || {}
+        if (maybeInstance instanceof Swiper) {
+          swiper = maybeInstance
+          swiper.update()
+        } else {
+          swiper = new Swiper('#' + this.get().swiperId, this.swiperOpts(opts))
+        }
+        // opts.initialSlide is handled after the swiper instance is
+        // constructed, so the handleSlideChange listener is not called while
+        // swiper is initializing. Because if it was, the constructor does not
+        // return before the callback is called, so the variable which
+        // "new Swiper(...)" is assigned to is undef
+        swiper.slideTo(opts.initialSlide)
+        return swiper
+      },
+      swiperOpts(_opts) {
         return {
           speed: 500,
-          initialSlide: opts.index || 0,
+          initialSlide: 0, // Always zero, see below
           effect: 'slide',
           preloadImages: false,
           lazy: {
@@ -176,10 +216,13 @@
       },
       withSwiper(callback) {
         const { swiper, isVisible } = this.get()
-        if (isVisible) {
+        if (swiper && isVisible) {
           callback(swiper)
         }
       },
+      relayEvent({ event, payload }) {
+        this.fire(event, payload)
+      }
     },
     helpers: {
       // @todo put this in a function out of the component and use it in
@@ -206,9 +249,8 @@
         // maximize all the time. The only problem with that is that small
         // images will be stretched to fit big screens ; this is expected to be
         // a rare scenario.
-
-        const width = image.width || opts.maxImageWidth || false
-        const height = image.height || opts.maxImageHeight || false
+        const width = image.width || opts.maxImageWidth || 999999
+        const height = image.height || opts.maxImageHeight || 999999
 
         let fitBackgroundToViewport = false
         if (width && (width + imagePadding * 2) > winInnerWidth) {

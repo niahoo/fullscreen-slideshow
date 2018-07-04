@@ -1,12 +1,16 @@
-body.fsss-body::-webkit-scrollbar {
-   visibility: hidden;
-}
-body.fsss-body::-webkit-scrollbar-track {
-  background: #111;
+@media only screen and (pointer: fine) {
+  html.fsss-html {
+    overflow-y: hidden;
+    height: 100%;
+  }
+  body.fsss-body {
+    overflow-y: hidden;
+    height: 100%;
+  }
 }
 .fsss-container {
   height: 100vh;
-  width: 100%;
+  width: 100vw;
   position: fixed;
   top: 0;
   z-index: 10001;
@@ -98,22 +102,31 @@ body.fsss-body .fsss-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 4em;
+    padding: 2em;
 }
-.fsss-title, .fsss-subtitle {
+.fsss-title, .fsss-subtitle, .fsss-text {
     /*text-align: center;*/
     font-weight: 300;
 }
 .fsss-title {
-  font-size: 4em;
+  font-size: 2em;
+}
+.fsss-subtitle {
+  font-size: 1em;
 }
 @media only screen and (min-width: 700px) {
   .fsss-title, .fsss-subtitle {
       /*text-align: left;*/
       max-width: 60%;
   }
+  .fsss-title {
+    font-size: 4em;
+  }
+  .fsss-subtitle {
+    font-size: 2em;
+  }
 }
 .fsss-text {
-  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  /*font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;*/
   color: white;
 }
