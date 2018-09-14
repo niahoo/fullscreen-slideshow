@@ -11,10 +11,6 @@ const production = !process.env.ROLLUP_WATCH;
 const outputJs = production
 	? 'dist/fsss.min.js'
 	: 'public/fsss.js'
-const outputCss = production
-	? 'dist/fsss.min.css'
-	: 'public/fsss.css'
-
 
 export default {
   input: 'src/main.js',
